@@ -1,0 +1,627 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================
+   ULTRA-MINIMALISTIC AMOLED THEME
+   With Floating Island, Glassmorphism, Particles
+   ============================================ */
+
+:root {
+  --bg-primary: #000000;
+  --bg-elevated: #0a0a0a;
+  --glass-bg: rgba(255, 255, 255, 0.03);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glow-color: rgba(255, 255, 255, 0.15);
+  --accent-glow: rgba(99, 102, 241, 0.4);
+}
+
+* {
+  scrollbar-width: none;
+}
+
+*::-webkit-scrollbar {
+  display: none;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Text', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: #000;
+  color: #fff;
+  letter-spacing: -0.02em;
+  overflow: hidden;
+}
+
+/* ============================================
+   PARTICLE BACKGROUND
+   ============================================ */
+
+.particle-container {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.particle {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  animation: float 30s infinite linear;
+  will-change: transform;
+}
+
+.particle:nth-child(1) { left: 10%; top: 20%; animation-delay: 0s; }
+.particle:nth-child(2) { left: 30%; top: 70%; animation-delay: 5s; }
+.particle:nth-child(3) { left: 50%; top: 40%; animation-delay: 10s; }
+.particle:nth-child(4) { left: 70%; top: 60%; animation-delay: 15s; }
+.particle:nth-child(5) { left: 85%; top: 30%; animation-delay: 20s; }
+.particle:nth-child(6) { left: 20%; top: 85%; animation-delay: 25s; }
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+    opacity: 0.2;
+  }
+  50% {
+    transform: translateY(-20px);
+    opacity: 0.4;
+  }
+}
+
+/* ============================================
+   FLOATING ISLAND LAYOUT
+   ============================================ */
+
+.floating-island {
+  position: relative;
+  background: rgba(10, 10, 10, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 24px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+}
+
+.floating-sidebar {
+  background: rgba(5, 5, 5, 0.98);
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* ============================================
+   GLASSMORPHISM EFFECTS (simplified for performance)
+   ============================================ */
+
+.glass {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.glass-strong {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* ============================================
+   AMBIENT GLOW
+   ============================================ */
+
+.ambient-glow {
+  position: relative;
+}
+
+.ambient-glow::before {
+  content: '';
+  position: absolute;
+  inset: -20px;
+  background: radial-gradient(ellipse at center, var(--accent-glow) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1), transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+  z-index: -1;
+  filter: blur(30px);
+  transform: scale(0.95);
+}
+
+.ambient-glow:hover::before {
+  opacity: 0.4;
+  transform: scale(1);
+}
+
+.ambient-glow:focus-within::before {
+  opacity: 0.7;
+  transform: scale(1);
+}
+
+.ambient-glow.has-text::before {
+  opacity: 1;
+  transform: scale(1.02);
+  animation: glowPulse 2s ease-in-out infinite;
+}
+
+@keyframes glowPulse {
+  0%, 100% { opacity: 0.7; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.03); }
+}
+
+/* ============================================
+   DRAG AND DROP ZONE
+   ============================================ */
+
+.drop-zone {
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.drop-zone.dragging {
+  background: rgba(99, 102, 241, 0.1);
+  border-color: rgba(99, 102, 241, 0.5);
+}
+
+.drop-zone.dragging::after {
+  content: 'Drop files here';
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(10px);
+  border: 2px dashed rgba(99, 102, 241, 0.5);
+  border-radius: inherit;
+  color: rgba(99, 102, 241, 0.8);
+  font-size: 14px;
+  font-weight: 500;
+  z-index: 10;
+  animation: dropZonePulse 1s ease-in-out infinite;
+}
+
+@keyframes dropZonePulse {
+  0%, 100% { border-color: rgba(99, 102, 241, 0.3); }
+  50% { border-color: rgba(99, 102, 241, 0.6); }
+}
+
+/* ============================================
+   SMOOTH TRANSITIONS
+   ============================================ */
+
+*, *::before, *::after {
+  transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform;
+  transition-duration: 200ms;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ============================================
+   COMPONENT STYLES
+   ============================================ */
+
+@layer components {
+  /* Buttons */
+  .btn-primary {
+    @apply bg-white text-black font-medium py-2.5 px-5 rounded-full
+           hover:bg-white/90 active:scale-[0.97];
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .btn-ghost {
+    @apply text-white/50 hover:text-white font-normal py-2 px-3 rounded-lg;
+    transition: all 0.2s ease;
+  }
+
+  .btn-icon {
+    @apply p-2.5 rounded-full
+           text-white/40 hover:text-white hover:bg-white/5 active:scale-90;
+    transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  /* Prompt enhancer button - AMOLED minimal */
+  .btn-enhance {
+    @apply px-1.5 py-0.5 rounded text-[9px] font-medium
+           bg-white/5 text-white/40 border border-white/10
+           hover:bg-white/10 hover:text-white/60 hover:border-white/15
+           active:scale-95;
+    transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  /* Smooth appear animation for enhance button */
+  .enhance-appear {
+    animation: enhanceSlide 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  }
+
+  @keyframes enhanceSlide {
+    from {
+      opacity: 0;
+      transform: translateY(4px) scale(0.9);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  /* Remake button on AI messages */
+  .remake-btn {
+    @apply p-1.5 rounded-lg text-white/0
+           group-hover:text-white/30 hover:text-white/60
+           hover:bg-white/5;
+    transition: all 0.2s ease;
+  }
+
+  .remake-dropdown {
+    @apply absolute right-0 top-full mt-1 py-1 rounded-lg z-50 min-w-[140px];
+    background: rgba(15, 15, 15, 0.98);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    animation: enhanceSlide 0.2s ease forwards;
+  }
+
+  /* Inputs */
+  .input-field {
+    @apply w-full px-4 py-3 rounded-xl border
+           text-white placeholder:text-white/20
+           focus:outline-none;
+    background: rgba(255, 255, 255, 0.03);
+    border-color: rgba(255, 255, 255, 0.05);
+    transition: all 0.3s ease;
+  }
+
+  .input-field:focus {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .input-minimal {
+    @apply flex-1 bg-transparent border-none outline-none
+           text-white placeholder:text-white/25
+           text-[15px] resize-none leading-relaxed;
+    min-height: 24px;
+  }
+
+  /* Message Bubbles - Glassmorphism */
+  .message-bubble {
+    @apply rounded-2xl px-4 py-2.5 max-w-[85%] min-w-fit;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    animation: messageSlide 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .message-user {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: white;
+  }
+
+  .message-assistant {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    color: rgba(255, 255, 255, 0.9);
+  }
+
+  /* Collapsible thread */
+  .thread-collapsed {
+    @apply relative overflow-hidden cursor-pointer;
+    max-height: 120px;
+  }
+
+  .thread-collapsed::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.9));
+    pointer-events: none;
+  }
+
+  .thread-expand-btn {
+    @apply absolute bottom-2 left-1/2 -translate-x-1/2 z-10
+           px-3 py-1 rounded-full text-xs font-medium
+           bg-white/10 text-white/60 hover:bg-white/15 hover:text-white
+           backdrop-blur-sm;
+    transition: all 0.2s ease;
+  }
+
+  /* Typing Indicator */
+  .typing-indicator {
+    @apply flex items-center gap-1.5 py-2;
+  }
+
+  .typing-dot {
+    @apply w-1.5 h-1.5 rounded-full bg-white/30;
+    animation: typingPulse 1.4s ease-in-out infinite;
+  }
+
+  .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+  .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+  /* Chat Input Container */
+  .chat-input-container {
+    @apply flex items-center gap-3 px-4 py-3 rounded-2xl;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    transition: all 0.2s ease;
+  }
+
+  .chat-input-container:focus-within {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.05),
+      0 8px 32px rgba(0, 0, 0, 0.3);
+  }
+
+  /* Sidebar Items */
+  .sidebar-item {
+    @apply flex items-center gap-3 px-3 py-2.5 rounded-xl cursor-pointer
+           text-white/40 hover:text-white/70;
+    transition: all 0.25s ease;
+  }
+
+  .sidebar-item:hover {
+    background: rgba(255, 255, 255, 0.03);
+  }
+
+  .sidebar-item-active {
+    @apply text-white;
+    background: rgba(255, 255, 255, 0.06);
+  }
+
+  /* Dropdowns - Glassmorphism */
+  .dropdown {
+    @apply absolute z-50 mt-2 py-1 rounded-xl overflow-hidden;
+    background: rgba(15, 15, 15, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    animation: dropdownSpring 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transform-origin: top;
+  }
+
+  .dropdown-item {
+    @apply px-4 py-2.5 text-sm cursor-pointer text-white/50 hover:text-white;
+    transition: all 0.15s ease;
+  }
+
+  .dropdown-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  .dropdown-item-active {
+    background: rgba(255, 255, 255, 0.05);
+    @apply text-white;
+  }
+
+  /* Modals - Glassmorphism */
+  .modal-overlay {
+    @apply fixed inset-0 z-50 flex items-center justify-center p-4;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    animation: fadeIn 0.25s ease;
+  }
+
+  .modal-content {
+    @apply max-h-[90vh] overflow-hidden;
+    background: rgba(15, 15, 15, 0.95);
+    backdrop-filter: blur(40px);
+    -webkit-backdrop-filter: blur(40px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 20px;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+    animation: modalSpring 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  /* Badges */
+  .badge {
+    @apply inline-flex items-center gap-1 px-2 py-0.5 rounded-full 
+           text-[10px] font-medium uppercase tracking-wide;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(10px);
+    animation: badgePop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .badge-accent {
+    @apply text-white/70;
+  }
+
+  .badge-warning {
+    @apply text-white/70;
+  }
+
+  /* Mode toggle button */
+  .mode-toggle-btn {
+    @apply p-1.5 rounded-lg text-white/30 hover:text-white/60;
+    transition: all 0.2s ease;
+  }
+
+  .mode-toggle-btn:hover {
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  .mode-toggle-btn.active {
+    @apply text-white;
+    background: rgba(255, 255, 255, 0.1);
+  }
+}
+
+/* ============================================
+   PROSE STYLES
+   ============================================ */
+
+.prose-chat {
+  @apply text-white/85 text-[15px] leading-relaxed;
+}
+
+.prose-chat p {
+  @apply mb-3 last:mb-0;
+}
+
+.prose-chat h1, .prose-chat h2, .prose-chat h3 {
+  @apply font-medium text-white mt-4 mb-2;
+}
+
+.prose-chat h1 { @apply text-lg; }
+.prose-chat h2 { @apply text-base; }
+.prose-chat h3 { @apply text-sm uppercase tracking-wide text-white/60; }
+
+.prose-chat ul, .prose-chat ol {
+  @apply pl-5 mb-3 space-y-1.5;
+}
+
+.prose-chat ul { @apply list-disc; }
+.prose-chat ol { @apply list-decimal; }
+
+.prose-chat li {
+  @apply text-white/75;
+}
+
+.prose-chat blockquote {
+  @apply border-l border-white/20 pl-4 text-white/50 my-3 italic;
+}
+
+.prose-chat a {
+  @apply text-white underline underline-offset-2 decoration-white/30 hover:decoration-white/60;
+}
+
+.prose-chat code:not(pre code) {
+  @apply px-1.5 py-0.5 rounded text-[13px] font-mono;
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.prose-chat pre {
+  @apply my-3 rounded-lg overflow-hidden;
+}
+
+/* ============================================
+   KEYFRAME ANIMATIONS
+   ============================================ */
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeInUp {
+  from { 
+    opacity: 0; 
+    transform: translateY(12px); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
+}
+
+@keyframes slideIn {
+  from { 
+    opacity: 0; 
+    transform: translateX(-16px); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateX(0); 
+  }
+}
+
+@keyframes messageSlide {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes dropdownSpring {
+  from {
+    opacity: 0;
+    transform: scaleY(0.9) translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: scaleY(1) translateY(0);
+  }
+}
+
+@keyframes modalSpring {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes typingPulse {
+  0%, 60%, 100% { 
+    opacity: 0.3; 
+    transform: scale(1);
+  }
+  30% { 
+    opacity: 1; 
+    transform: scale(1.2);
+  }
+}
+
+@keyframes badgePop {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Utility classes */
+.animate-fade-in {
+  animation: fadeIn 0.25s ease forwards;
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.animate-slide-in-left {
+  animation: slideIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* Force dark mode */
+.dark {
+  color-scheme: dark;
+}
+
+/* Selection */
+::selection {
+  background: rgba(99, 102, 241, 0.3);
+}
+
+/* Hover effects */
+.hover-lift {
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.hover-lift:hover {
+  transform: translateY(-2px);
+}
+
+.press-effect:active {
+  transform: scale(0.97);
+}
