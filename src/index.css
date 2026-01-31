@@ -304,6 +304,15 @@ body {
     background: rgba(255, 255, 255, 0.04);
     border: 1px solid rgba(255, 255, 255, 0.06);
     color: rgba(255, 255, 255, 0.9);
+    animation: assistantAppear 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  .message-assistant.streaming {
+    animation: assistantAppear 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  .message-assistant.streaming .prose-chat {
+    animation: contentFade 0.3s ease-out;
   }
 
   /* Collapsible thread */
@@ -543,6 +552,32 @@ body {
   to {
     opacity: 1;
     transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes assistantAppear {
+  0% {
+    opacity: 0;
+    transform: translateY(16px) scale(0.95);
+    filter: blur(4px);
+  }
+  40% {
+    opacity: 0.7;
+    filter: blur(1px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes contentFade {
+  from {
+    opacity: 0.5;
+  }
+  to {
+    opacity: 1;
   }
 }
 

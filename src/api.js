@@ -78,13 +78,38 @@ export async function* streamChatCompletion(messages, options = {}) {
 
   while (true) {
     const { done, value } = await reader.read();
-    if (done) break;
+    
+    if (done) {
+      // Finalize decoder and process remaining buffer
+      buffer += decoder.decode();
+      break;
+    }
 
     buffer += decoder.decode(value, { stream: true });
     const lines = buffer.split('\n');
     buffer = lines.pop() || '';
 
     for (const line of lines) {
+      const trimmed = line.trim();
+      if (!trimmed || trimmed === 'data: [DONE]') continue;
+      if (!trimmed.startsWith('data: ')) continue;
+
+      try {
+        const json = JSON.parse(trimmed.slice(6));
+        const content = json.choices?.[0]?.delta?.content;
+        if (content) {
+          yield content;
+        }
+      } catch (e) {
+        // Skip malformed JSON
+      }
+    }
+  }
+
+  // Process any remaining data in the buffer after stream ends
+  if (buffer.trim()) {
+    const remainingLines = buffer.split('\n');
+    for (const line of remainingLines) {
       const trimmed = line.trim();
       if (!trimmed || trimmed === 'data: [DONE]') continue;
       if (!trimmed.startsWith('data: ')) continue;
